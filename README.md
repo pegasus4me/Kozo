@@ -19,3 +19,5 @@ chatting platform
     - Redux pour le state managment
                     
   
+<h2>Class UML relation entre l'utilisateur et les rooms crées -------</h2>
+![image](https://user-images.githubusercontent.com/95578112/235748159-c56ab369-e6f6-4e77-9431-1bda1710ace8.png)
