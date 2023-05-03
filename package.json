@@ -1,0 +1,21 @@
+{
+  "name": "kuzo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.13.0",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.22",
+    "swr": "^2.1.5"
+  },
+  "devDependencies": {
+    "prisma": "^4.13.0"
+  }
+}

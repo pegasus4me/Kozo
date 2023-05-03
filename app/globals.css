@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html {
+  width: 100%;
+  height: 100%;
+  background-color: #F6F6F6;
+}
+
+@layer base {
+  @font-face {
+    font-family: kyvelight;
+    src: url('/public/fonts/kyivtype-sans-light.ttf');
+  }
+  @font-face {
+    font-family: kyveregular;
+    src: url('/public/fonts/KyivType-Sans-Regular-.ttf');
+  }
+ 
+}
