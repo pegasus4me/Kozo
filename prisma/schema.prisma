@@ -30,16 +30,16 @@ model Rooms {
   joinedBy  String[]  @db.ObjectId // users id inside the Room      
   messages  Message[]
 
-  user User[] @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Message {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   userId    String   @db.ObjectId
-  content   String
-  rooms     Rooms    @relation(fields: [roomsId], references: [id])
   roomsId   String   @db.ObjectId
+  content   String
 
-  user User @relation(fields: [userId], references: [id])
+  rooms     Rooms    @relation(fields: [roomsId], references: [id])
+  user      User @relation(fields: [userId], references: [id])
 }

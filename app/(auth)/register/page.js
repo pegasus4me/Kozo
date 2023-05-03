@@ -56,7 +56,7 @@ const Page = () => {
         <hr className="text-black"/>
         <div className="max-w-full ">
           <button class="text-white bg-green-700 hover:bg-slate-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-24 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-blue-800">
-            Login
+            Register
           </button>
         </div>
         <p className="text-sm mt-5">

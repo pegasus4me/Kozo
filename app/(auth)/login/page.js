@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const Page = () => {
+
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    
   return (
     <div className="flex flex-col items-center justify-center ">
       <div className="flex  flex-col items-center justify-center  p-3 m-3 bg-white rounded-lg drop-shadow-md">
