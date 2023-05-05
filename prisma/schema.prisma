@@ -41,5 +41,5 @@ model Message {
   content   String
 
   rooms     Rooms    @relation(fields: [roomsId], references: [id])
-  user      User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

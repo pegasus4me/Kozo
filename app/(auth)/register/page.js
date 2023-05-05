@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useState, useCallback } from "react";
 import axios from "axios";
-import { redirect } from "next/navigation";
 
 const Page = () => {
   const [firstName, setFirstName] = useState("");
@@ -10,19 +9,18 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
   const registerUser = useCallback(async () => {
     try {
-      let save = await axios.post('/api/user/register', {
+      let a = await axios.post("/api/user", {
         firstName,
         lastName,
         email,
         password,
       });
-      
-      console.log("ça marche ");
-      if (save) {
-        redirect("/login");
+      const { createdAt } = a.data.data;
+
+      if (createdAt !== null) {
+        
       }
     } catch (error) {
       console.log(error);

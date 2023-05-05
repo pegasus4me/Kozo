@@ -1,13 +1,27 @@
 "use client";
-import React from "react";
+import React, { useCallback } from "react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react"
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const validate_User_Connection = () => {};
+  const login = useCallback(async() => {
+        
+    try {
+      await signIn("credentials", {
+        email, 
+        password,
+        redirect : true,
+        callbackUrl: "/messages"
+      })
+    } catch (error) {
+        console.log(error)
+    }
+
+  },[email, password])
 
   return (
     <div className="flex flex-col items-center justify-center ">
@@ -45,7 +59,7 @@ const Page = () => {
         <div className="max-w-full ">
           <button
             className="text-white bg-green-700 hover:bg-slate-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-24 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-blue-800"
-            onClick={() => validate_User_Connection()}
+            onClick={() => login()}
           >
             Login
           </button>

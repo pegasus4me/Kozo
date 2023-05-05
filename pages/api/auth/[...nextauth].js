@@ -1,44 +1,47 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
-import prismadb from "@lib/prismadb";
 import { compare } from "bcrypt";
+
 const prisma = new PrismaClient();
 
 export const authOptions = {
-  providers: [
+    
+    providers: [
     CredentialsProvider({
       name: "Credentials",
-
+      
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         const { email, password } = credentials;
-
+        
         if (!email || !password) {
           throw new Error("email or password must be provided...");
         }
-
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
           where: {
             email: email,
           },
         });
 
+        console.log(user)
+
+
         if (!user || !user.hashedPassword) {
           throw new Error("Email does not exist");
         }
-
+      
         const checkPassword = await compare(password, user.hashedPassword);
+        
         if (!checkPassword) throw new Error("password not correct");
 
         return user;
       },
     }),
   ],
-
       pages: {
       signin : "/login",
     },
