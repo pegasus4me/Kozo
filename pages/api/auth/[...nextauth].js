@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
 
 const prisma = new PrismaClient();
-
 export const authOptions = {
     
     providers: [
@@ -16,18 +15,18 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const { email, password } = credentials;
-        
+        const { email, password, firstName } = credentials;
+        console.log("ddddddddddddddddddddddddddddd")
         if (!email || !password) {
           throw new Error("email or password must be provided...");
         }
         const user = await prisma.user.findFirst({
           where: {
             email: email,
+            firstName : firstName
           },
         });
 
-        console.log(user)
 
 
         if (!user || !user.hashedPassword) {
