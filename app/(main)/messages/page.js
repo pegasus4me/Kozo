@@ -3,6 +3,9 @@
 import React from "react";
 import { useSession, getSession } from "next-auth/react";
 import Button from "@/components/button";
+import Container from "@/components/Container";
+import RoomContainer from "@/components/roomContainer";
+import Popup from "@/components/popup";
 const Page = () => {
   const { data: session, status } = useSession();
   if (status === "loading") {
@@ -10,10 +13,20 @@ const Page = () => {
   }
 
   if (status === "unauthenticated") {
-    return <Button name= "login to get access" path="/login"/>;
+    return <Button name="login to get access" path="/login" />;
   }
   return (
     <div>
+      
+      <Container>
+        <RoomContainer>
+
+        </RoomContainer>
+      </Container>
+      
+      
+
+      <Popup/>
     </div>
   );
 };
