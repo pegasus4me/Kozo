@@ -11,19 +11,29 @@ const Header = () => {
   return (
     <header className="flex justify-between items-center">
       <div className="m-10 ml-10">
-        <Image src={kozoLogo} className="w-40 p-3" alt="logo" />
+        <Image
+          src={kozoLogo}
+          className="w-40 p-3"
+          alt="logo"
+          placeholder="kozo"
+        />
       </div>
       {status === "authenticated" ? (
         <div className="mr-10 flex items-center ">
-          <span class="relative flex h-3 w-3 mr-5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          <span className="relative flex h-3 w-3 mr-5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
           </span>
           <div>
-          <h2 className="text-sm font-medium text-gray-900">connected as : <span className="text-gray-500">{session.user.email}</span></h2>
-          <p className="text-xs font-medium text-gray-900"> statut : <span className="text-green-500">{status}</span></p>
+            <h2 className="text-sm font-medium text-gray-900">
+              connected as :{" "}
+              <span className="text-gray-500">{session.user.username}</span>
+            </h2>
+            <p className="text-xs font-medium text-gray-900">
+              {" "}
+              statut : <span className="text-green-500">{status}</span>
+            </p>
           </div>
-          
         </div>
       ) : (
         ""

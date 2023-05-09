@@ -16,7 +16,9 @@
     "dotenv": "^16.0.3",
     "next-auth": "^4.22.1",
     "nodemon": "^2.0.22",
+    "react-fast-marquee": "^1.5.2",
     "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
     "swr": "^2.1.5"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import React from 'react';
 import AiOutlineArrowRight from "./icons/arrow"
 const Popup = ({roomName, addRoom}) => {
     return (
-        <div className='bg-white max-w-md p-10 rounded-md shadow-md flex flex-col'> 
+        <div className='bg-white max-w-md p-10 rounded-md shadow-md flex flex-col '> 
             <div className='ml-28  text-right mb-8'>
                 <h3 className='text-4xl  text-gray-400'>name your R<span className='text-green-400 '>oo</span>m</h3>
             </div>

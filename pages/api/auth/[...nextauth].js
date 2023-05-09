@@ -4,56 +4,72 @@ import { PrismaClient } from "@prisma/client";
 import { compare } from "bcrypt";
 
 const prisma = new PrismaClient();
+
 export const authOptions = {
-    
-    providers: [
+  providers: [
     CredentialsProvider({
       name: "Credentials",
-      
+
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         const { email, password, firstName } = credentials;
-        console.log("ddddddddddddddddddddddddddddd")
         if (!email || !password) {
           throw new Error("email or password must be provided...");
         }
         const user = await prisma.user.findFirst({
           where: {
             email: email,
-            firstName : firstName
           },
         });
-
-
 
         if (!user || !user.hashedPassword) {
           throw new Error("Email does not exist");
         }
-      
+
         const checkPassword = await compare(password, user.hashedPassword);
-        
+
         if (!checkPassword) throw new Error("password not correct");
 
         return user;
       },
     }),
   ],
-      pages: {
-      signin : "/login",
-    },
-
-    session : {
-        strategy : "jwt",
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-    },
-
-    jwt :{
-      secret : process.env.NEXT_AUTH_JWT_SECRET 
+  pages: {
+    signin: "/login",
   },
 
-    secret : process.env.NEXT_AUTH_JWT_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+
+  jwt: {
+    secret: process.env.NEXT_AUTH_JWT_SECRET,
+  },
+
+  callbacks: {
+    
+      async jwt({ token, user }) {
+        // Persist the OAuth access_token and or the user id to the token right after signin
+        if(user) {
+          token.id = user.id;
+          token.username = user.firstName
+        }  
+        return token
+      },
+
+      session: async ({session, token}) => {
+        session.user.id = token.id
+        session.user.username = token.username
+        return session 
+      }
+  },
+
+  secret: process.env.NEXT_AUTH_SECRET,
+  
 };
 export default NextAuth(authOptions);
+

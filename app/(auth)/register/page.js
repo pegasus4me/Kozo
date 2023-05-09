@@ -17,11 +17,6 @@ const Page = () => {
         email,
         password,
       });
-      const { createdAt } = a.data.data;
-
-      if (createdAt !== null) {
-        
-      }
     } catch (error) {
       console.log(error);
     }
