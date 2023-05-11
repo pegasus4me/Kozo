@@ -17,6 +17,7 @@ const Page = () => {
         email,
         password,
       });
+      console.log(a)
     } catch (error) {
       console.log(error);
     }

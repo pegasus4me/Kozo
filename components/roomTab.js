@@ -1,9 +1,10 @@
 import React from 'react';
 
-const RoomTab = ({roomName}) => {
+const RoomTab = ({roomName, showDiscussionModal, color}) => {
     return (
-        <div className='max-w-lg bg-green-400 h-10 rounded-md flex justify-center items-center'>
-            <p className='font-medium text-slate-200'>{roomName}</p>
+        <div className={'max-w-lg h-10 rounded-md flex justify-center items-center' + color}>
+            <p className='font-medium text-slate-200' onClick={showDiscussionModal}>{roomName}</p>
+            {/* il lique sur la tab et il a affiche les discussions */}
         </div>
     );
 }

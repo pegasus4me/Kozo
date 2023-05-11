@@ -8,8 +8,6 @@ import RoomContainer from "@/components/roomContainer";
 import Popup from "@/components/popup";
 import Banner from "@/components/banner";
 import axios from "axios";
-import { io } from "socket.io-client";
-
 
 
 const Page = () => {
@@ -17,25 +15,15 @@ const Page = () => {
   const [popup, setPopup] = useState(false)
   const [roomName, setRoomName] = useState("")
 
-  const showPopUp = useCallback(async () => {
-    // display modal
-    setPopup(!popup)
-    // save new Room on databse + establish socketIO connection 
-    // trouver l'id et le passer dans le emit
-    
-  }, [popup]);
-  useEffect(() => emitSocketEvents(), [])
+  useEffect(() => {
+    // recuper le nom de l'user depuis la session nextAuth
+    // appeler la route avec axios et lui passer les informations du front
+    // mettre en place la logique de stockage et envoi messages avec input == ( a faire les composantn necessaies et les appeler ici et les passer les donnes d'affichage)
+  },[])
 
-  const emitSocketEvents = async() =>{
-    let socket;
-    await fetch('/api/socket')
-    socket = io()
-    
-    socket.on('connect', () => {
-      console.log('connected')
-    })
-    return null
-  }
+  const showPopUp = useCallback(async () => {
+    setPopup(!popup)
+  }, [popup]);
 
   const { data: session, status } = useSession();
   if (status === "loading") {
@@ -51,11 +39,11 @@ const Page = () => {
     <Banner />
     <div className="grid grid-cols-5 gap-2 mt-8">
       <Container newRoom={showPopUp}>
-        <RoomContainer rooms={["ddd", "ddddd"]}></RoomContainer>
+        <RoomContainer />
       </Container>
 
       {
-        popup ? <Popup roomName={(e) => setRoomName(e.currentTarget.value) } addRoom={emitSocketEvents}/>: null 
+        popup ? <Popup roomName={(e) => setRoomName(e.currentTarget.value) } addRoom={emitEvent}/>: null 
       }
     </div>
     </>
