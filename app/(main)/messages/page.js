@@ -8,24 +8,49 @@ import RoomContainer from "@/components/roomContainer";
 import Popup from "@/components/popup";
 import Banner from "@/components/banner";
 import axios from "axios";
-
+import Pusher from "pusher-js";
+import MessagePanel from "@/components/messagePanel";
+import Input from "@/components/input";
 
 const Page = () => {
-  
-  const [popup, setPopup] = useState(false)
-  const [roomName, setRoomName] = useState("")
+  const [popup, setPopup] = useState(false);
+  const [roomName, setRoomName] = useState("");
+  const [messageToSend, setMessageToSend] = useState("");
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    // recuper le nom de l'user depuis la session nextAuth
-    // appeler la route avec axios et lui passer les informations du front
-    // mettre en place la logique de stockage et envoi messages avec input == ( a faire les composantn necessaies et les appeler ici et les passer les donnes d'affichage)
-  },[])
+    const request = async () => {
+      // connect pusher whit my API_KEY
+      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+        cluster: "eu",
+      });
+      // join public channel
+      const channel = pusher.subscribe(roomName);
+
+      // mettre en place la logique de stockage et envoi messages avec input == ( a faire les composantn necessaies et les appeler ici et les passer les donnes d'affichage)
+
+      // recuper le nom de l'user depuis la session nextAuth
+
+      // message === recuperé depuis le composant input du messagePanel avec props passé dans le bind du pusher pour lui donner le state actuel
+      let sender = session.user.username;
+      // axios appel de route api enregister un post
+      let responses = await axios.post("/api/pusher", {
+        sender: sender,
+        channelName: roomName,
+
+        // le message est recuperé depuis l'imput de la modal de discussion
+      });
+    };
+
+    return () => {
+      // unmount
+    };
+  }, []);
 
   const showPopUp = useCallback(async () => {
-    setPopup(!popup)
+    setPopup(!popup);
   }, [popup]);
 
-  const { data: session, status } = useSession();
   if (status === "loading") {
     return <p>Loading...</p>;
   }
@@ -36,21 +61,29 @@ const Page = () => {
 
   return (
     <>
-    <Banner />
-    <div className="grid grid-cols-5 gap-2 mt-8">
-      <Container newRoom={showPopUp}>
-        <RoomContainer />
-      </Container>
+      <Banner />
+      <div className="grid grid-cols-[0px_minmax(30px,_2fr)_1500px]  gap-2 mt-8">
+        <Container newRoom={showPopUp}>
+          <RoomContainer />
+        </Container>
 
-      {
-        popup ? <Popup roomName={(e) => setRoomName(e.currentTarget.value) } addRoom={emitEvent}/>: null 
-      }
-    </div>
+        {
+          popup ? (
+            <Popup roomName={(e) => setRoomName(e.currentTarget.value)} />
+          ) : null // enlevé le emit event
+        }
+
+        <MessagePanel>
+
+          {/* je map sur la state qui stocke mes messages pour les afficher  */}
+          <Input 
+          value={(e) => setMessageToSend(e.currentTarget.value)}
+          send={message} 
+          />
+        </MessagePanel>
+      </div>
     </>
-    
   );
 };
 
 export default Page;
-
-

@@ -12,7 +12,7 @@ export const pusher = new Pusher({
 
 /*
  * cette route la va subscribe a channel (pusher.subscribe(channelName) avec pusher + on va le save dans le model Room dans notre BDD 
-coté client on va utiliser notre state qui stocke le nom attribué a la room et on va le passe au prima.create()
+coté client on va utiliser notre state qui stocke le nom attribué a la room et on va le passe au prisma.create()
 ce nom sera aussi passé en relais a mon composant qui gere l'affichage des rooms dans la modal 
 
 pour partir d'une discussion on va utiliser (pusher.unsubscribe(channelName)
