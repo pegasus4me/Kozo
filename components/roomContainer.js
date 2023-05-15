@@ -6,7 +6,8 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect, useReducer } from "react";
 import MessagePanel from "./messagePanel";
 
-const RoomContainer = ({ value, send, onInputChange }) => {
+const RoomContainer = ({ send, value }) => {
+
   const [rooms, setRooms] = useState([]);
   const [message, setMessage] = useState("");
   const [tabColor, setTabColor] = useState("bg-green-500");
@@ -57,8 +58,12 @@ const RoomContainer = ({ value, send, onInputChange }) => {
               <RoomTab
                 roomName={one.name}
                 color={tabColor}
+                // dynamic page sans affichage ici ( a voir )
                 showDiscussionModal={
-                  <MessagePanel value={value} send={send} onInputChange={onInputChange} />
+                  <MessagePanel 
+                    send={send} 
+                    value={value} 
+                  />
                 }
               />
             ); // info room derriere
@@ -69,6 +74,11 @@ const RoomContainer = ({ value, send, onInputChange }) => {
           <p className="text-md text-gray-300 font-medium">{message}</p>
         </div>
       )}
+
+              
+                 
+                
+              
     </div>
   );
 };

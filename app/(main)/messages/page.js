@@ -13,12 +13,15 @@ import MessagePanel from "@/components/messagePanel";
 import Input from "@/components/input";
 
 const Page = () => {
+  const { data: session, status } = useSession();
   const [popup, setPopup] = useState(false);
   const [roomName, setRoomName] = useState("");
+
   const [messageToSend, setMessageToSend] = useState("");
-  const { data: session, status } = useSession();
+  const [message, setMessage] = useState("");
+
   const [chats, setchats] = useState([]);
-  
+
   const messagesQ = async () => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: "eu",
@@ -42,8 +45,6 @@ const Page = () => {
     // });
   };
 
-
-
   const showPopUp = useCallback(async () => {
     setPopup(!popup);
   }, [popup]);
@@ -56,28 +57,24 @@ const Page = () => {
     return <Button name="login to get access" path="/login" />;
   }
 
-
-  const handleInputChange = (value) => {
+  const onInputChange = (value) => {
     setMessageToSend(value);
   };
 
-
   const sendMessage = () => {
     // Logique pour envoyer le message
-    console.log('message: ', messageToSend)
+    setMessage(messageToSend);
   };
+
+  console.log(messageToSend);
+  console.log(message);
 
   return (
     <>
       <Banner />
       <div className="grid grid-cols-[0px_minmax(30px,_2fr)_1500px]  gap-2 mt-8">
         <Container newRoom={showPopUp}>
-          <RoomContainer
-            onInputChange ={handleInputChange}
-            send={handleInputChange}
-            value={messageToSend}
-
-          />
+          <RoomContainer value={onInputChange} send={sendMessage} />
         </Container>
 
         {
@@ -89,7 +86,7 @@ const Page = () => {
           ) : null // enlevé le emit event
         }
       </div>
-      <MessagePanel />
+
     </>
   );
 };
