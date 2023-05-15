@@ -3,13 +3,15 @@ import React from "react";
 import RoomTab from "./roomTab";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
+import MessagePanel from "./messagePanel";
 
-const RoomContainer = ({ name }) => {
+const RoomContainer = ({ value, send, onInputChange }) => {
   const [rooms, setRooms] = useState([]);
   const [message, setMessage] = useState("");
   const [tabColor, setTabColor] = useState("bg-green-500");
   const { data: session, status } = useSession();
+  const [modal, setDiscussionModal] = useState(false);
 
   useEffect(() => {
     async function getroom() {
@@ -30,13 +32,36 @@ const RoomContainer = ({ name }) => {
     getroom();
   }, []);
 
+  // function showModal(){
+
+  //   setDiscussionModal(!modal)
+  //   if(modal) {
+  //      return  <MessagePanel
+  //         value={value}
+  //         send={send}
+  //         onChange={onChange}
+  //       />
+
+  //   } else {
+  //     return null
+  //   }
+  // }
+
   return (
     <div className="border-dotted border-2 border-gray-200 shadow-inner max-w-xs m-auto mt-7 h-4/6 rounded-md ">
       {!rooms === [] ? (
         <div>
           {rooms.map((one) => {
             // update here  the return statement
-            return <RoomTab roomName={name} color={tabColor} />; // info room derriere
+            return (
+              <RoomTab
+                roomName={one.name}
+                color={tabColor}
+                showDiscussionModal={
+                  <MessagePanel value={value} send={send} onInputChange={onInputChange} />
+                }
+              />
+            ); // info room derriere
           })}
         </div>
       ) : (
