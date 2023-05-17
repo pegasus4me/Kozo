@@ -29,6 +29,12 @@ export async function POST(req) {
       },
     });
 
+    // const response = await pusher.trigger(channelName, "messages-event", {
+    //   message,
+    //   sender,
+    // });
+
+    console.log(room)
 
     return NextResponse.json({
       statut: 200,
@@ -46,9 +52,6 @@ export async function POST(req) {
 
 /*
 
-    const response = await pusher.trigger(channelName, "messages-event", {
-      message,
-      sender,
-    });
+   
 
 */

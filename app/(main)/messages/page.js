@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useSession, getSession } from "next-auth/react";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useReducer } from "react";
 import Button from "@/components/button";
 import Container from "@/components/Container";
 import RoomContainer from "@/components/roomContainer";
@@ -15,13 +15,14 @@ import Input from "@/components/input";
 const Page = () => {
 
   const { data: session, status } = useSession();
-  const [popup, setPopup] = useState(false);
+  const [popup, setPopup] = useReducer((prev) =>! prev, false )
   const [name, setName] = useState("");
 
   const [messageToSend, setMessageToSend] = useState("");
   const [message, setMessage] = useState("");
 
   const [chats, setchats] = useState([]);
+  const [modal, setDiscussionModal] = useReducer((prev) =>! prev, false );
 
   const messagesQ = async () => {
     
@@ -53,15 +54,11 @@ const Page = () => {
       });
       console.log(responses.data)
     } catch (error) {
-      console.log(error.data)
+      throw new Error(error)
     }
    
   };
-
-  const showPopUp = useCallback(async () => {
-    setPopup(!popup);
-  }, [popup]);
-
+  
   if (status === "loading") {
     return <p>Loading...</p>;
   }
@@ -70,6 +67,9 @@ const Page = () => {
     return <Button name="login to get access" path="/login" />;
   }
 
+
+
+  // callbacks funsionts pour child input import to messagePanel
   const onInputChange = (value) => {
     setMessageToSend(value);
   };
@@ -78,16 +78,16 @@ const Page = () => {
     // Logique pour envoyer le message
     setMessage(messageToSend);
   };
-
  
   return (
     <>
       <Banner />
       <div className="grid grid-cols-[0px_minmax(30px,_2fr)_1500px]  gap-2 mt-8">
-        <Container newRoom={showPopUp}>
-          <RoomContainer value={onInputChange} send={sendMessage} />
+        <Container newRoom={setPopup}>
+          <RoomContainer value={onInputChange} send={sendMessage} showContainer={setDiscussionModal}/>
         </Container>
 
+        {modal && <MessagePanel value={onInputChange} send={sendMessage}/> }
         {
           popup ? (
             <Popup
@@ -97,7 +97,7 @@ const Page = () => {
           ) : null // enlevé le emit event
         }
       </div>
-
+      
     </>
   );
 };
