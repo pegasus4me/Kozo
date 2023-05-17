@@ -4,9 +4,8 @@ import RoomTab from "./roomTab";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useState, useEffect, useReducer } from "react";
-import MessagePanel from "./messagePanel";
 
-const RoomContainer = ({ send, value }) => {
+const RoomContainer = ({showContainer}) => {
   const [rooms, setRooms] = useState([]);
   const [message, setMessage] = useState("");
   const [tabColor, setTabColor] = useState("bg-green-500");
@@ -37,26 +36,28 @@ const RoomContainer = ({ send, value }) => {
 
   function showModal() {
     setDiscussionModal(!modal);
+
     if (modal) {
-      return <MessagePanel send={send} value={value} />;
+      return null
     } else {
       return null;
     }
   }
-
+  
   return (
     <div className="border-dotted border-2 border-gray-200 shadow-inner max-w-xs m-auto mt-7 h-4/6 rounded-md p-2 ">
       {!rooms.length !== 0 ? (
         <div>
-          {rooms.map((one) => {
+          {rooms.map((one,index) => {
             // update here  the return statement
             return (
-              <RoomTab
+              <div key={index}>
+                <RoomTab
                 roomName={one.name}
-                color={tabColor}
-                showDiscussionModal={showModal}
+                showDiscussionModal={showContainer}
               />
-            ); // info room derriere
+              </div>
+            ); 
           })}
         </div>
       ) : (
@@ -64,6 +65,8 @@ const RoomContainer = ({ send, value }) => {
           <p className="text-md text-gray-300 font-medium">{message}</p>
         </div>
       )}
+
+      
     </div>
   );
 };
