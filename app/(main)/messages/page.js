@@ -13,39 +13,50 @@ import MessagePanel from "@/components/messagePanel";
 import Input from "@/components/input";
 
 const Page = () => {
-  const [popup, setPopup] = useState(false);
-  const [roomName, setRoomName] = useState("");
-  const [messageToSend, setMessageToSend] = useState("");
+
   const { data: session, status } = useSession();
+  const [popup, setPopup] = useState(false);
+  const [name, setName] = useState("");
 
-  useEffect(() => {
-    const request = async () => {
-      // connect pusher whit my API_KEY
-      const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-        cluster: "eu",
+  const [messageToSend, setMessageToSend] = useState("");
+  const [message, setMessage] = useState("");
+
+  const [chats, setchats] = useState([]);
+
+  const messagesQ = async () => {
+    
+    let sender = session.user.username;
+    let userId = session.user.id
+
+    // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+    //   cluster: "eu",
+    // });
+    // const channel = pusher.subscribe(roomName);
+  
+    // let setChannel = channel.bind("messages-event", (data) => {
+    //   console.log("data : ", data);
+    //   setchats((previous) => [
+    //     ...previous,
+    //     { sender: data.sender, message: data.message },
+    //   ]);
+    // });
+    // console.log(setChannel);
+
+    try {
+      
+      let responses = await axios.post("/api/pusher",{
+        // sender: sender,
+        userId : userId,
+        name : name
+        // message : message   //:: ( j'ai ajouté message ici )
+  
       });
-      // join public channel
-      const channel = pusher.subscribe(roomName);
-
-      // mettre en place la logique de stockage et envoi messages avec input == ( a faire les composantn necessaies et les appeler ici et les passer les donnes d'affichage)
-
-      // recuper le nom de l'user depuis la session nextAuth
-
-      // message === recuperé depuis le composant input du messagePanel avec props passé dans le bind du pusher pour lui donner le state actuel
-      let sender = session.user.username;
-      // axios appel de route api enregister un post
-      let responses = await axios.post("/api/pusher", {
-        sender: sender,
-        channelName: roomName,
-
-        // le message est recuperé depuis l'imput de la modal de discussion
-      });
-    };
-
-    return () => {
-      // unmount
-    };
-  }, []);
+      console.log(responses.data)
+    } catch (error) {
+      console.log(error.data)
+    }
+   
+  };
 
   const showPopUp = useCallback(async () => {
     setPopup(!popup);
@@ -59,29 +70,34 @@ const Page = () => {
     return <Button name="login to get access" path="/login" />;
   }
 
+  const onInputChange = (value) => {
+    setMessageToSend(value);
+  };
+
+  const sendMessage = () => {
+    // Logique pour envoyer le message
+    setMessage(messageToSend);
+  };
+
+ 
   return (
     <>
       <Banner />
       <div className="grid grid-cols-[0px_minmax(30px,_2fr)_1500px]  gap-2 mt-8">
         <Container newRoom={showPopUp}>
-          <RoomContainer />
+          <RoomContainer value={onInputChange} send={sendMessage} />
         </Container>
 
         {
           popup ? (
-            <Popup roomName={(e) => setRoomName(e.currentTarget.value)} />
+            <Popup
+              roomName={(e) => setName(e.currentTarget.value)}
+              addRoom={() => messagesQ()}
+            />
           ) : null // enlevé le emit event
         }
-
-        <MessagePanel>
-
-          {/* je map sur la state qui stocke mes messages pour les afficher  */}
-          <Input 
-          value={(e) => setMessageToSend(e.currentTarget.value)}
-          send={message} 
-          />
-        </MessagePanel>
       </div>
+
     </>
   );
 };
