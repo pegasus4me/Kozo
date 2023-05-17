@@ -13,9 +13,10 @@ import MessagePanel from "@/components/messagePanel";
 import Input from "@/components/input";
 
 const Page = () => {
+
   const { data: session, status } = useSession();
   const [popup, setPopup] = useState(false);
-  const [roomName, setRoomName] = useState("");
+  const [name, setName] = useState("");
 
   const [messageToSend, setMessageToSend] = useState("");
   const [message, setMessage] = useState("");
@@ -23,26 +24,38 @@ const Page = () => {
   const [chats, setchats] = useState([]);
 
   const messagesQ = async () => {
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-      cluster: "eu",
-    });
-    const channel = pusher.subscribe(roomName);
+    
     let sender = session.user.username;
+    let userId = session.user.id
 
-    let a = channel.bind("messages-event", (data) => {
-      console.log("data : ", data);
-      setchats((previous) => [
-        ...previous,
-        { sender: data.sender, message: data.message },
-      ]);
-    });
-    console.log(a);
-
-    // let responses = await axios.post("/api/pusher", {
-    //   sender: sender,
-    //   channelName: roomName,
-
+    // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
+    //   cluster: "eu",
     // });
+    // const channel = pusher.subscribe(roomName);
+  
+    // let setChannel = channel.bind("messages-event", (data) => {
+    //   console.log("data : ", data);
+    //   setchats((previous) => [
+    //     ...previous,
+    //     { sender: data.sender, message: data.message },
+    //   ]);
+    // });
+    // console.log(setChannel);
+
+    try {
+      
+      let responses = await axios.post("/api/pusher",{
+        // sender: sender,
+        userId : userId,
+        name : name
+        // message : message   //:: ( j'ai ajouté message ici )
+  
+      });
+      console.log(responses.data)
+    } catch (error) {
+      console.log(error.data)
+    }
+   
   };
 
   const showPopUp = useCallback(async () => {
@@ -66,9 +79,7 @@ const Page = () => {
     setMessage(messageToSend);
   };
 
-  console.log(messageToSend);
-  console.log(message);
-
+ 
   return (
     <>
       <Banner />
@@ -80,7 +91,7 @@ const Page = () => {
         {
           popup ? (
             <Popup
-              roomName={(e) => setRoomName(e.currentTarget.value)}
+              roomName={(e) => setName(e.currentTarget.value)}
               addRoom={() => messagesQ()}
             />
           ) : null // enlevé le emit event

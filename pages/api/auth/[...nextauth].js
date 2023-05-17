@@ -24,6 +24,7 @@ export const authOptions = {
             email: email,
           },
         });
+        console.log("voici l'user", user)
 
         if (!user || !user.hashedPassword) {
           throw new Error("Email does not exist");
