@@ -12,20 +12,29 @@ const RoomContainer = ({showContainer}) => {
   const { data: session, status } = useSession();
   const [modal, setDiscussionModal] = useState(false);
 
+  console.log(rooms)
+
   useEffect(() => {
     async function getroom() {
       
       try {
-        let create_rooms = await axios.get("/api/Rooms");
+        let create_rooms = await axios.get("/api/Rooms");        
         if (create_rooms.data.length === 0) {
           return setMessage("Create New Channel");
         }
-        setRooms(create_rooms.data);
-        
-        // if (create_rooms.data.userId !== session.user.id) {
-        //   // spot de diffrence betweeen two rooms
-        //   setTabColor("bg-red-500");
-        // }
+        for (let i = 0; i < create_rooms.data.length; i++) {
+          
+          if(session.user.id === create_rooms.data[i].userId) {
+            setRooms((previous) => [
+              ...previous,
+              create_rooms.data[i]
+            ]);
+          }
+        }
+        if (create_rooms.data.userId !== session.user.id) {
+          // spot de diffrence betweeen two rooms
+          setTabColor("bg-red-500");
+        }
       
       } catch (error) {
         throw new Error(error);

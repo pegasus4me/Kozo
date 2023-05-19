@@ -4,13 +4,14 @@ import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 export async function GET(req) {
+
+
   try {
     const rooms = await prisma.rooms.findMany({
       orderBy: {
         createdAt: "desc",
       },
     });
-    console.log(rooms);
     if (rooms.length === 0) {
       return NextResponse.json("there are no rooms created");
     }
