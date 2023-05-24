@@ -31,30 +31,30 @@ export async function POST(req) {
       },
     });
 
-
-    
-
-    if(!CHECK_ROOM_NAME) {
-      await prisma.rooms.create({
+    if (!CHECK_ROOM_NAME) {
+      let a = await prisma.rooms.create({
         data: {
           userId,
           name,
+          joinedBy: {
+            set: userId,
+          },
         },
       });
     } else {
-      await prisma.rooms.update({
-        where : {
-          id : CHECK_ROOM_NAME.id
+      const update = await prisma.rooms.update({
+        where: {
+          id: CHECK_ROOM_NAME.id,
         },
-        data : {
-          joinedBy : {
-            userId
-          }
-        }
-      })
+        data: {
+          joinedBy: {
+            set: userId,
+          },
+        },
+      });
     }
-    // si le nom est deja pris ajouté l'utisateur dans les joinedRooms
 
+    //////////////// pusher
     const response = await pusher.trigger(name, "messages-event", {
       message,
       sender,

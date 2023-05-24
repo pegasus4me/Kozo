@@ -55,6 +55,7 @@ export const authOptions = {
     
       async jwt({ token, user }) {
         // Persist the OAuth access_token and or the user id to the token right after signin
+        console.log(user)
         if(user) {
           token.id = user.id;
           token.username = user.firstName
