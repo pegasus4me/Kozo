@@ -27,3 +27,4 @@ const Input = ({ value, send }) => {
 };
 
 export default Input;
+

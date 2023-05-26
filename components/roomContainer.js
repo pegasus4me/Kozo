@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import RoomTab from "./roomTab";
 import axios from "axios";
@@ -7,12 +6,11 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect, useReducer } from "react";
 import { useRouter } from "next/navigation";
 
-const RoomContainer = () => {
+const RoomContainer = ({ roomvalue }) => {
   const [rooms, setRooms] = useState([]);
   const [message, setMessage] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
-
   useEffect(() => {
     async function getroom() {
       try {
@@ -20,6 +18,7 @@ const RoomContainer = () => {
         if (create_rooms.data.length === 0)
           return setMessage("Create New Channel");
         for (let i = 0; i < create_rooms.data.length; i++) {
+          console.log("user id", session.user.id);
           if (session.user.id === create_rooms.data[i].userId) {
             setRooms((previous) => [...previous, create_rooms.data[i]]);
           }
@@ -40,7 +39,12 @@ const RoomContainer = () => {
               <div key={index}>
                 <RoomTab
                   roomName={one.name}
-                  showPage={() => router.push(`/messages/${one.id}`)}
+                  showPage={() =>
+                    router.push({
+                      pathname: `/messages/${one.id}`,
+                      query: roomvalue,
+                    })
+                  }
                 />
               </div>
             );
