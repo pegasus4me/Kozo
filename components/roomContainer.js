@@ -18,7 +18,6 @@ const RoomContainer = ({ roomvalue }) => {
         if (create_rooms.data.length === 0)
           return setMessage("Create New Channel");
         for (let i = 0; i < create_rooms.data.length; i++) {
-          console.log("user id", session.user.id);
           if (session.user.id === create_rooms.data[i].userId) {
             setRooms((previous) => [...previous, create_rooms.data[i]]);
           }
@@ -40,10 +39,7 @@ const RoomContainer = ({ roomvalue }) => {
                 <RoomTab
                   roomName={one.name}
                   showPage={() =>
-                    router.push({
-                      pathname: `/messages/${one.id}`,
-                      query: roomvalue,
-                    })
+                    router.push(`/messages/${one.id}`)
                   }
                 />
               </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.13.0",
+    "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
@@ -20,6 +21,9 @@
     "pusher-js": "^8.0.2",
     "react-fast-marquee": "^1.5.2",
     "react-loader-spinner": "^5.3.4",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
     "swr": "^2.1.5"
