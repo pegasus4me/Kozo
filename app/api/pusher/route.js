@@ -10,6 +10,8 @@ export const pusher = new Pusher({
   cluster: process.env.PUSHER_CLUSTER,
 });
 
+////////////////
+
 export async function POST(req) {
   if (req.method !== "POST") {
     return NextResponse.json({
@@ -20,38 +22,52 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const { message, sender, name, userId } = body; 
-
-    const room = await prisma.rooms.create({
-      data: {
-        userId,
+    const { message, sender, name, userId } = body;
+    let data = {};
+    const CHECK_ROOM_NAME = await prisma.rooms.findFirst({
+      where: {
         name,
+        userId,
       },
     });
 
-    // const response = await pusher.trigger(channelName, "messages-event", {
+    if (!CHECK_ROOM_NAME) {
+      let value = await prisma.rooms.create({
+        data: {
+          userId,
+          name,
+          joinedBy: {
+            set: userId,
+          },
+        },
+      });
+
+      data.value = value;
+    } else {
+      await prisma.rooms.update({
+        where: {
+          id: CHECK_ROOM_NAME.id,
+        },
+        data: {
+          joinedBy: {
+            set: userId,
+          },
+        },
+      });
+    }
+
+    //////////////// pusher
+    // const response = await pusher.trigger(name, "messages-event", {
     //   message,
     //   sender,
     // });
-
-    console.log(room)
-
     return NextResponse.json({
       statut: 200,
       message: "channel succesfully created",
-      data: room,
+      data: data,
     });
-
-
-
   } catch (error) {
     NextResponse.json(error);
     console.log(error);
   }
 }
-
-/*
-
-   
-
-*/

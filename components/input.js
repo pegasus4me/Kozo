@@ -6,7 +6,7 @@ const Input = ({ value, send }) => {
   // callback events functions
 
   const handleInputChange = (e) => {
-    value(e.target.value);
+    value(e.currentTarget.value);
   };
 
   return (
@@ -27,3 +27,4 @@ const Input = ({ value, send }) => {
 };
 
 export default Input;
+

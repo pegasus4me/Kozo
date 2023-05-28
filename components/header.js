@@ -2,7 +2,6 @@
 import React from "react";
 import Image from "next/image";
 import kozoLogo from "../public/assets/kozoLogo.svg";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 const Header = () => {

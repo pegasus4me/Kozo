@@ -1,105 +1,55 @@
 "use client";
 import React from "react";
-import { useSession, getSession } from "next-auth/react";
-import { useState, useEffect, useMemo, useCallback, useReducer } from "react";
+import { useState, useEffect, useReducer } from "react";
 import Button from "@/components/button";
 import Container from "@/components/Container";
 import RoomContainer from "@/components/roomContainer";
 import Popup from "@/components/popup";
 import Banner from "@/components/banner";
 import axios from "axios";
-import Pusher from "pusher-js";
-import MessagePanel from "@/components/messagePanel";
-import Input from "@/components/input";
+import { useSession } from "next-auth/react";
+import Loader from "@/components/loader";
 
 const Page = () => {
-
+  const [popup, setPopup] = useReducer((prev) => !prev, false);
+  const [roomName, setRoomName] = useState("");
   const { data: session, status } = useSession();
-  const [popup, setPopup] = useReducer((prev) =>! prev, false )
-  const [name, setName] = useState("");
 
-  const [messageToSend, setMessageToSend] = useState("");
-  const [message, setMessage] = useState("");
 
-  const [chats, setchats] = useState([]);
-  const [modal, setDiscussionModal] = useReducer((prev) =>! prev, false );
-
-  const messagesQ = async () => {
-    
-    let sender = session.user.username;
-    let userId = session.user.id
-
-    // const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
-    //   cluster: "eu",
-    // });
-    // const channel = pusher.subscribe(roomName);
   
-    // let setChannel = channel.bind("messages-event", (data) => {
-    //   console.log("data : ", data);
-    //   setchats((previous) => [
-    //     ...previous,
-    //     { sender: data.sender, message: data.message },
-    //   ]);
-    // });
-    // console.log(setChannel);
-
+  const room_name = async () => {
     try {
-      
-      let responses = await axios.post("/api/pusher",{
-        // sender: sender,
-        userId : userId,
-        name : name
-        // message : message   //:: ( j'ai ajouté message ici )
-  
+      let a = await axios.post("/api/pusher", {
+        name: roomName,
+        userId: session.user.id,
       });
-      console.log(responses.data)
+      
+      console.log("data", a)
     } catch (error) {
-      throw new Error(error)
+      console.log(error);
+      console.log("dddd");
     }
-   
   };
-  
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
 
-  if (status === "unauthenticated") {
+  if (status === "loading") return <Loader />;
+  if (status === "unauthenticated")
     return <Button name="login to get access" path="/login" />;
-  }
 
-
-
-  // callbacks funsionts pour child input import to messagePanel
-  const onInputChange = (value) => {
-    setMessageToSend(value);
-  };
-
-  const sendMessage = () => {
-    // Logique pour envoyer le message
-    setMessage(messageToSend);
-  };
- 
   return (
     <>
       <Banner />
       <div className="grid grid-cols-[0px_minmax(30px,_2fr)_1500px]  gap-2 mt-8">
         <Container newRoom={setPopup}>
-          <RoomContainer value={onInputChange} send={sendMessage} showContainer={setDiscussionModal}/>
+          <RoomContainer roomvalue={roomName} />
         </Container>
-
-        {modal && <MessagePanel value={onInputChange} send={sendMessage}/> }
-        {
-          popup ? (
-            <Popup
-              roomName={(e) => setName(e.currentTarget.value)}
-              addRoom={() => messagesQ()}
-            />
-          ) : null // enlevé le emit event
-        }
+        {popup ? (
+          <Popup
+            roomName={(e) => setRoomName(e.currentTarget.value)}
+            addRoom={() => room_name()}
+          />
+        ) : null}
       </div>
-      
     </>
   );
 };
-
 export default Page;

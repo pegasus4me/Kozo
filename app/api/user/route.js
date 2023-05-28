@@ -21,14 +21,10 @@ export async function POST(req) {
         email,
       },
     });
-
-    if (existingUser) {
+    if (existingUser)
       return NextResponse.json({ message: "email already registerd " });
-    }
 
     const hashedPassword = await bcrypt.hash(password, saltround);
-    console.log(hashedPassword);
-    
     const user = await prisma.user.create({
       data: {
         firstName,
@@ -37,13 +33,11 @@ export async function POST(req) {
         hashedPassword,
       },
     });
-
     return NextResponse.json({
       message: "User created successfully",
       data: user,
     });
   } catch (error) {
-    console.log("dd", error);
     return NextResponse.json({ status: 500, msg: error });
   }
 }

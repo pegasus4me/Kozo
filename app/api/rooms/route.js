@@ -10,10 +10,9 @@ export async function GET(req) {
         createdAt: "desc",
       },
     });
-    console.log(rooms);
-    if (rooms.length === 0) {
+
+    if (rooms.length === 0)
       return NextResponse.json("there are no rooms created");
-    }
 
     return NextResponse.json(rooms);
   } catch (error) {
