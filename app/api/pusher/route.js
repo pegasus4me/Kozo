@@ -13,6 +13,7 @@ export const pusher = new Pusher({
 ////////////////
 
 export async function POST(req) {
+
   if (req.method !== "POST") {
     return NextResponse.json({
       statut: "405",
@@ -20,17 +21,19 @@ export async function POST(req) {
     });
   }
 
+  
   try {
     const body = await req.json();
     const { message, sender, name, userId } = body;
-    let data = {};
+    let data = {}; // room user details
+
     const CHECK_ROOM_NAME = await prisma.rooms.findFirst({
       where: {
         name,
         userId,
       },
     });
-
+   
     if (!CHECK_ROOM_NAME) {
       let value = await prisma.rooms.create({
         data: {
@@ -43,24 +46,14 @@ export async function POST(req) {
       });
 
       data.value = value;
-    } else {
-      await prisma.rooms.update({
-        where: {
-          id: CHECK_ROOM_NAME.id,
-        },
-        data: {
-          joinedBy: {
-            set: userId,
-          },
-        },
-      });
-    }
-
+     }
+     
     //////////////// pusher
-    // const response = await pusher.trigger(name, "messages-event", {
-    //   message,
-    //   sender,
-    // });
+    const response = await pusher.trigger(name, "messages-event", {
+      message,
+      sender,
+    });
+   
     return NextResponse.json({
       statut: 200,
       message: "channel succesfully created",
@@ -71,3 +64,4 @@ export async function POST(req) {
     console.log(error);
   }
 }
+
