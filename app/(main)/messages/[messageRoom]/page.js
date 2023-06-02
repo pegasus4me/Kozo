@@ -10,13 +10,12 @@ import Loader from "@/components/loader";
 import Message from "@/components/message";
 const Page = () => {
   const { data: session, status } = useSession();
-  const params = useParams();
   const [messageToSend, setMessageToSend] = useState("");
   const [chats, setChats] = useState([]);
   const [roomName, setRoomName] = useState("");
   const [loading, setLoading] = useState(true);
   const [roomNameLoaded, setRoomNameLoaded] = useState(false);
-
+  const [persistMessages , setPersistVal] = useState('')
   useEffect(() => {
     if (!roomNameLoaded) {
       findOneRoom();
@@ -24,20 +23,13 @@ const Page = () => {
       const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
         cluster: "eu",
       });
-
       const channel = pusher.subscribe(roomName);
-
-      let setChannel = channel.bind("messages-event", () => {
-        setChats((previous) => [
-          ...previous,
-          { sender: session.user.username, message: messageToSend },
-        ]);
+      channel.bind("messages-event", (data) => {
+        setChats((chats) => [...chats, data]);
       });
-      console.log(messageToSend);
     }
   }, [roomName, roomNameLoaded]);
-
-  console.log(chats);
+      
   const findOneRoom = async () => {
     try {
       let check = await axios.get("/api/oneRoom");
@@ -76,12 +68,13 @@ const Page = () => {
         <Loader />
       ) : roomName ? (
         <MessagePanel
+          user={session.user.username}
           channelName={roomName}
           value={onInputChange}
           send={handleSubmit}
         >
-          {chats.map((chat) => (
-            <Message sender={chat.sender} message={chat.message} />
+          {chats.map((chat, index) => (
+            <Message sender={chat.sender} message={chat.message} key={index}/>
           ))}
         </MessagePanel>
       ) : null}

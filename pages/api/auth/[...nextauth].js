@@ -14,8 +14,8 @@ export const authOptions = {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        const { email, password, firstName } = credentials;
+      async authorize(credentials) {
+        const { email, password } = credentials;
         if (!email || !password) {
           throw new Error("email or password must be provided...");
         }
